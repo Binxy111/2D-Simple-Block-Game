@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple 2D Minecraft</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script>
+        // Initialize the Phaser game
+        var config = {
+            type: Phaser.AUTO,
+            width: 1280,
+            height: 767,
+            parent: 'game-container',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        // Disable manual fullscreen
+        game.scale.fullscreenEnabled = true;
+
+        // Preload assets
+        function preload() {
+            this.load.image('block1', 'Grass Block.png'); // Replace with your block texture
+            this.load.image('block2', 'sand.png'); // Replace with another block texture
+            this.load.image('block3', 'bedrock.png'); // Replace with another block texture
+            this.load.image('block4', 'rock.png'); // Replace with another block texture
+            this.load.image('block5', 'soil.png'); // Replace with another block texture
+        }
+
+        // Create game objects
+        function create() {
+            var blockSize = 32; // Adjust the block size here (smaller value for smaller blocks)
+            var selectedBlockType = 'block1'; // Default selected block type
+
+            // Set the background color to cyan
+            this.cameras.main.setBackgroundColor('#00FFFF');
+
+            // Create a text object for displaying the selected block
+            this.selectedBlockText = this.add.text(10, 10, 'Selected Block: ' + selectedBlockType, {
+                fontSize: '24px',
+                fill: '#000000'
+            });
+
+            // Enable mouse input
+            this.input.on('gameobjectdown', function (pointer, block) {
+                block.destroy();
+            });
+
+            this.input.on('pointerdown', function (pointer) {
+                var x = Math.floor(pointer.x / blockSize) * blockSize;
+                var y = Math.floor(pointer.y / blockSize) * blockSize;
+                var block = this.blocks.create(x, y, selectedBlockType);
+                block.setOrigin(0);
+                block.setInteractive();
+                block.displayWidth = blockSize; // Set the display width of the block
+                block.displayHeight = blockSize; // Set the display height of the block
+            }, this);
+
+            // Keybindings for block selection
+            var self = this;
+            this.input.keyboard.on('keydown-ONE', function () {
+                selectedBlockType = 'block1';
+                self.selectedBlockText.setText('Selected Block: ' + selectedBlockType);
+            });
+            this.input.keyboard.on('keydown-TWO', function () {
+                selectedBlockType = 'block2';
+                self.selectedBlockText.setText('Selected Block: ' + selectedBlockType);
+            });
+            this.input.keyboard.on('keydown-THREE', function () {
+                selectedBlockType = 'block3';
+                self.selectedBlockText.setText('Selected Block: ' + selectedBlockType);
+            });
+            this.input.keyboard.on('keydown-FOUR', function () {
+                selectedBlockType = 'block4';
+                self.selectedBlockText.setText('Selected Block: ' + selectedBlockType);
+            });
+            this.input.keyboard.on('keydown-FIVE', function () {
+                selectedBlockType = 'block5';
+                self.selectedBlockText.setText('Selected Block: ' + selectedBlockType);
+            });
+
+            // Create a group to hold the blocks
+            this.blocks = this.physics.add.group();
+        }
+
+        // Update game logic
+        function update() {
+            // Add your game logic here
+        }
+    </script>
+</body>
+</html>
